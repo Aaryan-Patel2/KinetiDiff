@@ -1,0 +1,149 @@
+[project]
+name = "kinetidiff"
+version = "0.1.0"
+description = "Vina-guided diffusion for structure-based drug design targeting ACVR1/ALK2 (FOP)"
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [{ name = "Aaryan Patel", email = "aaryanp0302@gmail.com" }]
+requires-python = ">=3.10,<3.11"
+keywords = [
+  "diffusion",
+  "drug-discovery",
+  "structure-based",
+  "ACVR1",
+  "ALK2",
+  "FOP",
+  "AutoDock-Vina",
+  "molecular-dynamics",
+  "equivariant",
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3.10",
+  "Topic :: Scientific/Engineering :: Bio-Informatics",
+  "Topic :: Scientific/Engineering :: Chemistry",
+]
+
+# Pure-Python runtime deps managed by uv.
+# The CUDA stack (pytorch, torch-geometric, torch-scatter, openbabel, rdkit)
+# is installed via conda — see environment.yml. Do not list those here.
+dependencies = [
+  "biopython>=1.79",
+  "hydra-core>=1.3,<1.4",
+  "omegaconf>=2.3",
+  "pyyaml>=6.0",
+  "tqdm>=4.65",
+  "meeko>=0.7,<0.8",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=7.4",
+  "pytest-cov>=4.1",
+  "ruff>=0.5",
+  "mypy>=1.10",
+  "pre-commit>=3.7",
+  "ipykernel",
+  "nbstripout>=0.7",
+]
+docs = [
+  "mkdocs>=1.6",
+  "mkdocs-material>=9.5",
+  "mkdocstrings[python]>=0.25",
+]
+# MD stack: install with environment-md.yml (conda) then `uv sync --extra md`
+md = [
+  "mdanalysis>=2.7",
+  "mdtraj>=1.10",
+]
+# Affinity predictor extras (pytorch already in conda env)
+affinity = [
+  "pytorch-lightning>=2.0,<2.1",
+  "torchmetrics>=0.11,<1.0",
+]
+binana = ["binana>=2.0"]
+
+[project.scripts]
+kinetidiff-generate = "kinetidiff.generation.generate_with_vina_guidance:main"
+kinetidiff-generate-multi = "kinetidiff.generation.generate_multi_objective:main"
+kinetidiff-train = "kinetidiff.train.train_affinity:main"
+
+[project.urls]
+Homepage = "https://github.com/Aaryan-Patel2/kinetidiff"
+Repository = "https://github.com/Aaryan-Patel2/kinetidiff"
+Issues = "https://github.com/Aaryan-Patel2/kinetidiff/issues"
+Changelog = "https://github.com/Aaryan-Patel2/kinetidiff/blob/main/CHANGELOG.md"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/kinetidiff"]
+
+# ============================================================
+# ruff — linter + formatter
+# ============================================================
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+extend-exclude = ["notebooks", "paper", "*.ipynb"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM", "RUF"]
+ignore = [
+  "E501",   # line length handled by formatter
+  "B008",   # function calls in default args (common in argparse)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["F401", "F811"]
+"**/__init__.py" = ["F401"]
+# Legacy copied code — errors pre-date the kinetidiff restructure
+"src/kinetidiff/gcdm/**" = ["E402", "E721", "E722", "B007", "B020", "B028", "B904", "B905", "F401", "F722", "F821", "F841", "RUF", "SIM", "UP"]
+"src/kinetidiff/guidance/**" = ["E402", "E721", "E722", "B007", "B020", "B028", "B904", "B905", "F401", "F841", "RUF", "SIM", "UP"]
+"src/kinetidiff/docking/**" = ["E402", "E721", "E722", "B007", "B020", "B028", "B904", "B905", "F401", "F841", "RUF", "SIM", "UP"]
+"src/kinetidiff/generation/**" = ["E402", "E722", "B007", "B904", "B905", "F401", "F841", "RUF", "SIM", "UP"]
+"src/kinetidiff/molecular_dynamics/**" = ["E402", "E721", "E722", "B007", "B020", "B028", "B904", "B905", "F401", "F841", "F821", "RUF", "SIM", "UP"]
+"src/kinetidiff/analysis/**" = ["E402", "E721", "E722", "B007", "B020", "B028", "B904", "B905", "F401", "F841", "RUF", "SIM", "UP"]
+"src/kinetidiff/affinity_pred/**" = ["E402", "E721", "E722", "B007", "B020", "B028", "B904", "B905", "F401", "F841", "RUF", "SIM", "UP"]
+"src/kinetidiff/train/**" = ["E402", "B905", "F401", "SIM", "UP"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+# ============================================================
+# mypy
+# ============================================================
+[tool.mypy]
+python_version = "3.10"
+ignore_missing_imports = true
+check_untyped_defs = true
+warn_return_any = false
+exclude = ["notebooks", "paper", "src/kinetidiff/gcdm/external"]
+
+# ============================================================
+# pytest
+# ============================================================
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-ra --strict-markers --strict-config"
+markers = [
+  "slow: tests that take >5 seconds",
+  "gpu: tests requiring a CUDA-capable GPU",
+  "vina: tests requiring AutoDock Vina binary on PATH",
+]
+
+# ============================================================
+# coverage
+# ============================================================
+[tool.coverage.run]
+source = ["src/kinetidiff"]
+omit = ["*/tests/*", "paper/*"]
+
+[tool.coverage.report]
+exclude_lines = ["pragma: no cover", "if TYPE_CHECKING:", "@overload"]

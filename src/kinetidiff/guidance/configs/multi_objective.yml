@@ -1,0 +1,117 @@
+# Multi-Objective Guidance Configuration
+# =======================================
+# This config focuses on the adaptive weighting system for multi-objective optimization.
+
+# ================================================================================
+# PROBLEM BACKGROUND
+# ================================================================================
+# Previous approach (static weights):
+#   w_affinity=0.4, w_docking=0.4, w_sa=0.2
+# 
+# Results:
+#   ✅ Affinity: pKd ≥ 6.0
+#   ✅ Docking: ≤ -10.0 kcal/mol
+#   ❌ SA: ~5.5+ (too high, difficult to synthesize)
+#
+# Root cause: SA was under-weighted, model prioritized affinity/docking
+#
+# Solution: Adaptive weighting that monitors satisfaction and adjusts weights
+# ================================================================================
+
+# Strategy selection
+# ------------------
+# adaptive_threshold: Adjusts weights based on objective satisfaction
+#                     (recommended for balanced optimization)
+# pareto:            Pareto-front optimization with Tchebycheff scalarization
+#                     (for exploring trade-off surface)
+# soft_constraint:   Barrier functions with exponential penalties
+#                     (for strict constraint satisfaction)
+strategy: "adaptive_threshold"
+
+# Objective definitions
+# ---------------------
+objectives:
+  affinity:
+    name: "Binding Affinity (pKd)"
+    direction: "maximize"  # Higher pKd = stronger binding
+    target: 7.0            # Ideal value to aim for
+    threshold: 6.0         # Minimum acceptable (hard constraint)
+    weight_initial: 0.33   # Starting weight
+    
+  docking:
+    name: "Docking Score (kcal/mol)"
+    direction: "minimize"  # More negative = better binding
+    target: -11.0          # Ideal value to aim for
+    threshold: -10.0       # Maximum acceptable (hard constraint)
+    weight_initial: 0.33   # Starting weight
+    
+  sa:
+    name: "Synthetic Accessibility"
+    direction: "minimize"  # Lower = easier to synthesize
+    target: 3.0            # Ideal value to aim for
+    threshold: 3.5         # Maximum acceptable (hard constraint)
+    weight_initial: 0.34   # Starting weight
+    min_weight: 0.25       # Minimum weight (prevents underweighting)
+    penalty_multiplier: 10.0  # Extra penalty for violations
+
+# Adaptive weighting parameters
+# -----------------------------
+adaptive:
+  # How quickly weights adapt to satisfaction changes
+  # Higher = faster adaptation, but may oscillate
+  adaptation_rate: 0.1
+  
+  # Use inverse satisfaction weighting
+  # (unsatisfied objectives get higher weights)
+  inverse_satisfaction: true
+  
+  # Track history for weight adjustment decisions
+  history_window: 100  # Steps to average over
+  
+  # Weight bounds
+  min_weight: 0.1
+  max_weight: 0.6
+
+# Pareto-specific parameters
+# --------------------------
+pareto:
+  # Normalization ranges for objective comparison
+  normalization:
+    affinity: [5.0, 9.0]    # pKd range
+    docking: [-15.0, -5.0]  # Docking score range
+    sa: [1.0, 6.0]          # SA score range
+  
+  # Weight adjustment based on achievement
+  achievement_threshold: 0.1  # Within 10% of worst is "under-performing"
+
+# Soft constraint parameters
+# --------------------------
+soft_constraint:
+  # Penalty function shape
+  penalty_type: "exponential"  # exponential, quadratic, or linear
+  
+  # Penalty scaling (higher = steeper penalty near threshold)
+  penalty_scale: 1.0
+  
+  # SA-specific penalty (to prevent SA underweighting)
+  sa_penalty_multiplier: 10.0
+
+# Composite score calculation
+# ---------------------------
+# For final ranking when all objectives roughly satisfied
+composite_score:
+  weights:
+    affinity: 0.35
+    docking: 0.30
+    sa: 0.25
+    qed: 0.10
+  
+  # Normalization method: z-score, minmax, or none
+  normalization: "minmax"
+
+# Logging and debugging
+# ---------------------
+logging:
+  log_weights_every: 10      # Steps between weight logging
+  log_satisfaction_every: 10  # Steps between satisfaction logging
+  save_weight_history: true   # Save full weight adaptation history

@@ -1,0 +1,14 @@
+# Git LFS tracking for large files
+# This tells Git to use LFS for large data files
+
+# Ignore the large TSV file (too big even for LFS)
+data/bindingdb_data/BindingDB_All.tsv
+data/bindingdb_data/*.zip
+
+# Track model checkpoints with LFS (if you add them)
+*.ckpt filter=lfs diff=lfs merge=lfs -text
+*.pth filter=lfs diff=lfs merge=lfs -text
+*.pkl filter=lfs diff=lfs merge=lfs -text
+
+# Track large numpy arrays
+*.npy filter=lfs diff=lfs merge=lfs -text

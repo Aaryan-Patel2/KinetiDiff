@@ -1,0 +1,51 @@
+cff-version: 1.2.0
+message: "If you use KinetiDiff in your research, please cite it as below."
+type: software
+title: "KinetiDiff: Docking-Guided Diffusion for De Novo ACVR1 Inhibitor Design in Fibrodysplasia Ossificans Progressiva"
+abstract: >
+  KinetiDiff is a structure-based framework for de novo kinase inhibitor design
+  that integrates a Geometry-Complete Diffusion Model with real-time AutoDock Vina
+  gradient guidance. By injecting physics-based docking gradients into the diffusion
+  denoising loop, KinetiDiff steers molecule generation toward high-affinity
+  conformations for ACVR1 (ALK2), the causative kinase in Fibrodysplasia Ossificans
+  Progressiva.
+authors:
+  - family-names: Patel
+    given-names: Aaryan
+    email: aaryanp0302@gmail.com
+repository-code: "https://github.com/AP0302/FOP-Code"
+license: MIT
+version: 0.1.0
+date-released: "2026-04-28"
+identifiers:
+  - type: url
+    value: "https://arxiv.org/abs/2604.20886"
+    description: "arXiv preprint"
+  - type: other
+    value: "arXiv:2604.20886 [physics.chem-ph]"
+    description: "arXiv identifier"
+preferred-citation:
+  type: article
+  title: "KinetiDiff: Docking-Guided Diffusion for De Novo ACVR1 Inhibitor Design in Fibrodysplasia Ossificans Progressiva"
+  authors:
+    - family-names: Patel
+      given-names: Aaryan
+      email: aaryanp0302@gmail.com
+  year: 2026
+  journal: "arXiv preprint"
+  volume: "arXiv:2604.20886"
+  url: "https://arxiv.org/abs/2604.20886"
+  notes: "21 pages, 10 figures. Subjects: Chemical Physics (physics.chem-ph); Machine Learning (cs.LG)"
+keywords:
+  - diffusion models
+  - drug discovery
+  - structure-based drug design
+  - AutoDock Vina
+  - gradient guidance
+  - ACVR1
+  - ALK2
+  - fibrodysplasia ossificans progressiva
+  - molecular generation
+  - de novo design
+  - kinase inhibitor
+  - equivariant neural networks

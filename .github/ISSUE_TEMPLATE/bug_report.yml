@@ -1,0 +1,70 @@
+name: Bug Report
+description: Something isn't working as expected
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug! Please fill out as many fields as you can.
+        For questions, use [Discussions](https://github.com/Aaryan-Patel2/kinetidiff/discussions) instead.
+
+  - type: input
+    id: version
+    attributes:
+      label: KinetiDiff version
+      placeholder: "0.1.0 or commit SHA"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Affected component
+      options:
+        - Vina gradient guidance (vina_gradient_guidance.py)
+        - Guided generation (generate_with_vina_guidance.py)
+        - Multi-objective generation
+        - Affinity predictor (HNN-Denovo)
+        - MD pipeline
+        - Installation / environment
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: Bug description
+      description: What happened vs. what you expected.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Run `python -m kinetidiff.generation.generate_with_vina_guidance ...`
+        2. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      placeholder: |
+        - OS: Ubuntu 22.04
+        - Python: 3.10.x
+        - PyTorch: 2.0.1+cu118
+        - CUDA: 11.8
+        - conda env: kinetidiff (from environment.yml)
+      render: markdown
+    validations:
+      required: true
+
+  - type: textarea
+    id: traceback
+    attributes:
+      label: Full traceback (if applicable)
+      render: python

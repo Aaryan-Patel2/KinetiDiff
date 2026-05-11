@@ -1,0 +1,64 @@
+name: gcdm-sbdd-env
+channels:
+  - conda-forge
+  - pytorch
+  - defaults
+dependencies:
+  - python=3.10
+  - pip
+  - numpy=1.24.3
+  - scipy=1.10.0
+  - scikit-learn=1.2.2
+  - matplotlib-base=3.7.1
+  # RDKit & OpenBabel: install from conda-forge to avoid pip binary issues
+  - rdkit=2022.03.2
+  - openbabel=3.1.1
+  # PyTorch + CUDA (match GCDM pinned builds)
+  - pytorch=2.0.1
+  - pytorch-cuda=11.8
+  - pyg=2.3.0=py310_torch_2.0.0_cu118
+  - pytorch-scatter=2.1.1=py310_torch_2.0.0_cu118
+  - pytorch-lightning=2.0.2
+  - torchmetrics=0.11.4
+  - cython
+  - pandas=2.0.2
+  - numba
+  - pip:
+    - meeko==0.7.1
+    - meep
+    - jupyter
+    - seaborn
+    - tqdm
+    - requests
+    - jsonschema
+    - git+https://github.com/ccsb-scripps/AutoDock-Vina.git
+  # END COMPATIBILITY PINS
+
+  # ORIGINAL (backup) - uncomment to restore original deps if needed
+  # - numpy=1.24.3
+  # - scipy
+  # - scikit-learn=1.2.2
+  # - matplotlib=3.7.1
+  # - rdkit=2023.9.1
+  # - pytorch=2.0.1
+  # - cudatoolkit=11.8
+  # - pyg=2.3.0
+  # - pytorch-scatter=2.1.1
+  # - pytorch-lightning=2.0.2
+  # - torchmetrics=0.11.4
+  # - cython
+  # - pandas
+  # - openbabel
+  # - numba
+  #  - pip:
+  #    - meeko
+  #    - meep
+  #    - jupyter
+  #    - seaborn
+  #    - tqdm
+  #    - requests
+  #    - jsonschema
+  #    - meeko==0.7.1
+  #    - git+https://github.com/ccsb-scripps/AutoDock-Vina.git
+
+# Note: AutoDock Vina binary is downloaded separately (not via pip) in setup script

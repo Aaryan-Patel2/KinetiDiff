@@ -1,0 +1,66 @@
+# GCDM Guided Generation Configuration
+# =====================================
+# This config file controls the multi-objective guided generation parameters.
+
+# Model paths
+model:
+  gcdm_checkpoint: "GCDM-SBDD-modified/checkpoints/bindingmoad_ca_cond_gcpnet.ckpt"
+  affinity_checkpoint: "models/affinity_pred/checkpoints/best_model.pt"
+
+# Generation settings
+generation:
+  n_samples: 100
+  batch_size: 20
+  seed: 42
+  
+# Pocket definition
+pocket:
+  radius: 10.0  # Angstroms
+  representation: "CA"  # CA or full-atom
+
+# Guidance settings
+guidance:
+  enabled:
+    affinity: true
+    docking: true
+    sa: true
+  
+  scale: 1.0  # Overall guidance scale
+  
+  # Multi-objective strategy
+  # Options: adaptive_threshold, pareto, soft_constraint
+  strategy: "adaptive_threshold"
+  
+  # Adaptation rate for adaptive strategies
+  adaptation_rate: 0.1
+
+# Objective targets (ideal values to optimize toward)
+targets:
+  affinity_pkd: 7.0      # Target binding affinity (pKd)
+  docking_score: -11.0    # Target docking score (kcal/mol)
+  sa_score: 3.0           # Target synthetic accessibility
+
+# Objective thresholds (minimum acceptable values)
+thresholds:
+  affinity_min: 6.0       # Minimum pKd
+  docking_max: -10.0      # Maximum docking score (more negative = better)
+  sa_max: 3.5             # Maximum SA score (lower = easier to synthesize)
+
+# SA-specific parameters (to fix underweighting problem)
+sa_params:
+  penalty_multiplier: 10.0  # Extra penalty for SA violations
+  min_weight: 0.25          # Minimum SA weight in adaptive strategy
+
+# Output settings
+output:
+  save_all: false           # Save all molecules or just filtered
+  save_pdb: false           # Save individual PDB files
+  filter_by_thresholds: true
+  top_k: null               # null = save all filtered, integer = top-k only
+
+# Docking settings
+docking:
+  use_fast_approximation: true  # true for guidance, false for final evaluation
+  vina_executable: "qvina2.1"
+  box_size: [20, 20, 20]
+  exhaustiveness: 8

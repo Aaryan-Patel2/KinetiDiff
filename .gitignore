@@ -1,0 +1,156 @@
+# ============================================================
+# Python
+# ============================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+
+# ============================================================
+# Virtual environments & package managers
+# ============================================================
+venv/
+.venv/
+env/
+ENV/
+.env
+.uv/
+
+# ============================================================
+# Model checkpoints & weights  (distribute via Zenodo)
+# ============================================================
+*.ckpt
+*.pt
+*.pth
+*.bin
+*.safetensors
+
+# ============================================================
+# Molecular structure & docking files
+# Keep source PDB/PDBQT out of git — use download scripts.
+# The only allowed PDB is tests/fixtures/ (tiny, public).
+# ============================================================
+*.pdb
+*.pdbqt
+*.sdf
+*.mol
+*.mol2
+*.xyz
+*.pse
+# Allow the small test fixture
+!tests/fixtures/*.pdb
+
+# ============================================================
+# MD trajectory & simulation outputs
+# ============================================================
+*.dcd
+*.xtc
+*.trr
+*.nc
+*.h5
+*.hdf5
+*.chk
+
+# ============================================================
+# Generated results & outputs
+# ============================================================
+src/results/
+results/
+outputs/
+src/checkpoints/
+
+# ============================================================
+# LaTeX build artifacts
+# ============================================================
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+*.toc
+*.lof
+*.lot
+# Keep LaTeX source; ignore compiled PDFs and diagrams in paper/
+paper/**/*.pdf
+paper/diagrams/*.png
+
+# ============================================================
+# Data directories (populated by download scripts, not git)
+# ============================================================
+src/data/structures/
+src/data/converted_structures/
+src/data/local/
+data/
+
+# ============================================================
+# External / vendored libraries
+# ============================================================
+src/external/
+
+# ============================================================
+# MD local run artifacts
+# ============================================================
+**/KinetiDiff_STS_*/
+src/molecular_dynamics/inputs/
+
+# ============================================================
+# Training artifacts
+# ============================================================
+wandb/
+mlruns/
+lightning_logs/
+tensorboard_logs/
+outputs/
+
+# ============================================================
+# Notebook checkpoints (outputs cleared by nbstripout hook)
+# ============================================================
+.ipynb_checkpoints/
+
+# ============================================================
+# Binary blobs (use Zenodo / release assets)
+# ============================================================
+*.zip
+*.tar.gz
+*.tar.bz2
+
+# ============================================================
+# IDEs & editors
+# ============================================================
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ============================================================
+# Agent / LLM tooling (private developer context)
+# ============================================================
+.llm/
+
+# ============================================================
+# Secrets & credentials
+# ============================================================
+.env.*
+*.key
+*.pem
+secrets.yaml
+credentials.json
+
+# ============================================================
+# CI cache
+# ============================================================
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/

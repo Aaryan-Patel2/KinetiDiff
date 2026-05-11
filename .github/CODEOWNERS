@@ -1,0 +1,14 @@
+# CODEOWNERS — GitHub auto-requests review from these users on PRs touching these paths.
+
+# Default: Aaryan Patel reviews everything
+* @Aaryan-Patel2
+
+# Core guidance contribution — careful review required
+src/kinetidiff/gcdm/equivariant_diffusion/conditional_model.py @Aaryan-Patel2
+src/kinetidiff/gcdm/equivariant_diffusion/vina_gradient_guidance.py @Aaryan-Patel2
+src/kinetidiff/guidance/vina_guidance.py @Aaryan-Patel2
+
+# CI / packaging
+.github/ @Aaryan-Patel2
+pyproject.toml @Aaryan-Patel2
+environment.yml @Aaryan-Patel2
