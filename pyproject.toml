@@ -60,7 +60,7 @@ md = [
 ]
 # Affinity predictor extras (pytorch already in conda env)
 affinity = [
-  "pytorch-lightning>=2.0,<2.1",
+  "pytorch-lightning>=2.0,<2.7",
   "torchmetrics>=0.11,<2.0",
 ]
 binana = ["binana>=2.0"]
