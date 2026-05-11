@@ -16,7 +16,7 @@
 
 ## Description
 
-**FOP-SBDD** is a novel computational drug discovery pipeline for designing kinase inhibitors targeting **Fibrodysplasia Ossificans Progressiva (FOP)**, a rare genetic disorder caused by mutations in the ACVR1/ALK2 receptor. 
+**KinetiDiff** is a novel computational drug discovery pipeline for designing kinase inhibitors targeting **Fibrodysplasia Ossificans Progressiva (FOP)**, a rare genetic disorder caused by mutations in the ACVR1/ALK2 receptor. 
 
 Unlike traditional drug discovery approaches that optimize solely for tight binding affinity, this pipeline introduces **kinetics-aware multi-objective optimization** — simultaneously optimizing for:
 
