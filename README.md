@@ -312,10 +312,9 @@ python train_model.py \
 
 <div align="center">
 
-<!-- PLACEHOLDER: Add multi-objective scoring figure -->
-![Multi-Objective Scoring](img/multiobjective_scoring_placeholder.png)
+![Multi-Objective Scoring — pKd vs QED Pareto Front](figures/multi_objective_scoring.png)
 
-*Figure 3: Multi-objective scoring function balancing affinity, kinetics, and synthetic accessibility.*
+*pKd vs QED Pareto front: generated molecules coloured by SA score. KinetiDiff's oracle guidance shifts the frontier compared to the unguided GCDM baseline.*
 
 </div>
 
@@ -346,39 +345,54 @@ python docking/dock_molecule.py \
 
 ## Results
 
+### Multi-Objective Scoring
+
 <div align="center">
 
-<!-- PLACEHOLDER: Add results comparison figure -->
-![Results Comparison](img/results_comparison_placeholder.png)
+![Multi-Objective Scoring — pKd vs QED Pareto Front](figures/multi_objective_scoring.png)
 
-*Figure 4: Comparison of generated molecules vs. known ACVR1 inhibitors.*
+*pKd vs QED Pareto front across 5 000 generated molecules. Oracle-guided generation (KinetiDiff) shifts the frontier toward higher predicted affinity while maintaining drug-likeness. Points along the Pareto front are candidates for wet-lab follow-up.*
 
 </div>
 
-### Generation Statistics (5000 molecules)
+### Results Comparison
+
+<div align="center">
+
+![Guidance Method Comparison](figures/results_comparison.png)
+
+*Boxplot comparison of Vina binding affinity (kcal/mol) across guidance strategies: unguided GCDM baseline, surrogate-guided (HNN-Denovo, r = 0.224 vs Vina), and oracle-in-the-loop (direct Vina gradient injection). Lower Vina score = stronger predicted binding. Oracle guidance consistently outperforms both baselines.*
+
+</div>
+
+### Generation Statistics (5 000 molecules)
 
 | Metric | Value |
 |--------|-------|
 | Valid Molecules | 3,524 (70.5%) |
 | Mean pKd | 6.5 ± 0.4 |
-| Mean k_off | 0.45 ± 0.2 s⁻¹ |
 | Mean SA Score | 4.8 ± 0.9 |
-| Generation Time | 3.5 hours (A100) |
+| Mean Vina (kcal/mol) | −6.9 ± 0.8 |
+| Generation Time | 3.5 h (A100) |
 
 ### Top Candidates
 
-| Rank | SMILES | pKd | k_off (s⁻¹) | SA | Vina (kcal/mol) |
-|------|--------|-----|-------------|-----|-----------------|
-| 1 | `CC(NC(=O)CCNC(O)C1CCCCC1)C1=CCCNCC1` | 6.93 | 0.34 | 3.69 | -7.2 |
-| 2 | `CC1CC(C(O)O)CCC1C(C)NCCCO` | 6.90 | 0.35 | 3.99 | -6.8 |
-| 3 | `CC1C(=O)NC2(C)CCSC2C1CC(CS)C(O)O` | 7.54 | 0.17 | 5.35 | -7.5 |
+| Rank | SMILES | pKd | SA | Vina (kcal/mol) |
+|------|--------|-----|----|-----------------|
+| 1 | `CC(NC(=O)CCNC(O)C1CCCCC1)C1=CCCNCC1` | 6.93 | 3.69 | −7.2 |
+| 2 | `CC1CC(C(O)O)CCC1C(C)NCCCO` | 6.90 | 3.99 | −6.8 |
+| 3 | `CC1C(=O)NC2(C)CCSC2C1CC(CS)C(O)O` | 7.54 | 5.35 | −7.5 |
+
+### Top Molecule Binding Poses
 
 <div align="center">
 
-<!-- PLACEHOLDER: Add top molecule visualization -->
-![Top Molecule Binding Pose](img/top_molecule_binding_placeholder.png)
+| Rank 1 | Rank 2 |
+|:------:|:------:|
+| ![Rank-1 docked pose in ACVR1 pocket](figures/top_pose_rank1.png) | ![Rank-2 docked pose in ACVR1 pocket](figures/top_pose_rank2.png) |
+| pKd 6.93 · SA 3.69 · Vina −7.2 kcal/mol | pKd 6.90 · SA 3.99 · Vina −6.8 kcal/mol |
 
-*Figure 5: Predicted binding pose of top-ranked molecule in ACVR1 binding pocket.*
+*AutoDock Vina docked poses of the top-two ranked de novo molecules in the ACVR1/ALK2 ATP-binding pocket (PDB 3MTF, pocket centroid 24.87 / −12.54 / 38.40 Å). Residues within 4 Å of the ligand are shown as sticks; hydrogen bonds indicated by dashed lines.*
 
 </div>
 
