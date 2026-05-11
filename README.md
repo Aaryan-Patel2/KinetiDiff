@@ -287,7 +287,7 @@ python docking/dock_top_100_multiobjective.py \
 <div align="center">
 
 <!-- PLACEHOLDER: Add model architecture figure -->
-![Bayesian Model Architecture](img/bayesian_architecture_placeholder.png)
+![Bayesian Model Architecture](figures/architecture.png)
 
 *Figure 2: Hybrid CNN architecture with Bayesian linear layers for uncertainty-aware affinity prediction.*
 
