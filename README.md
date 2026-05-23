@@ -26,11 +26,6 @@ Unlike traditional drug discovery approaches that optimize solely for tight bind
 
 <div align="center">
 
-<!-- PLACEHOLDER: Add pipeline overview figure -->
-![Pipeline Overview](img/pipeline_overview_placeholder.png)
-
-*Figure 1: Multi-objective drug discovery pipeline combining Bayesian affinity prediction with GCDM-guided molecule generation.*
-
 </div>
 
 ### Key Innovations
@@ -312,10 +307,6 @@ python train_model.py \
 
 <div align="center">
 
-![Multi-Objective Scoring — pKd vs QED Pareto Front](figures/multi_objective_scoring.png)
-
-*pKd vs QED Pareto front: generated molecules coloured by SA score. KinetiDiff's oracle guidance shifts the frontier compared to the unguided GCDM baseline.*
-
 </div>
 
 **Scoring Function:**
@@ -379,9 +370,9 @@ python docking/dock_molecule.py \
 
 | Rank | SMILES | pKd | SA | Vina (kcal/mol) |
 |------|--------|-----|----|-----------------|
-| 1 | `CC(NC(=O)CCNC(O)C1CCCCC1)C1=CCCNCC1` | 6.93 | 3.69 | −7.2 |
-| 2 | `CC1CC(C(O)O)CCC1C(C)NCCCO` | 6.90 | 3.99 | −6.8 |
-| 3 | `CC1C(=O)NC2(C)CCSC2C1CC(CS)C(O)O` | 7.54 | 5.35 | −7.5 |
+| 1 | `O=C(NC1CCNCC1c1ccc[nH]1)c1c(C2CCCOC2)ccc2ccccc12` | 8.10 | 3.79 | −11.05 |
+| 2 | `O=S(=O)(Cc1cccnc1)Nc1ccc(F)cc1-c1ccc2ccccc2c1C1CCNCC1` | 7.79 | 2.61 | −10.62 |
+| 3 | `NC(=O)NC(=O)CC1CNCCC1c1cccc2ccccc12` | 7.77 | 4.12 | −10.59 |
 
 ### Top Molecule Binding Poses
 
@@ -390,7 +381,7 @@ python docking/dock_molecule.py \
 | Rank 1 | Rank 2 |
 |:------:|:------:|
 | ![Rank-1 docked pose in ACVR1 pocket](figures/top_pose_rank1.png) | ![Rank-2 docked pose in ACVR1 pocket](figures/top_pose_rank2.png) |
-| pKd 6.93 · SA 3.69 · Vina −7.2 kcal/mol | pKd 6.90 · SA 3.99 · Vina −6.8 kcal/mol |
+| pKd 8.10 · SA 3.79 · Vina −11.05 kcal/mol | pKd 7.79 · SA 2.61 · Vina -10.62 kcal/mol |
 
 *AutoDock Vina docked poses of the top-two ranked de novo molecules in the ACVR1/ALK2 ATP-binding pocket (PDB 3MTF, pocket centroid 24.87 / −12.54 / 38.40 Å). Residues within 4 Å of the ligand are shown as sticks; hydrogen bonds indicated by dashed lines.*
 
