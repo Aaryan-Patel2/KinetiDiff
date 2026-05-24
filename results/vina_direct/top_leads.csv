@@ -1,0 +1,7 @@
+rank,smiles,vina_kcal_mol,pkd,sa_score,qed,mol_weight_da,lipinski_violations,source_run,notes
+1,O=C(NC1CCNCC1c1ccc[nH]1)c1c(C2CCCOC2)ccc2ccccc12,-11.05,8.10,3.79,0.618,403.5,0,generated_local_10k,19.2% improvement over crystallographic ref; 10 pocket residues contacted; 1 H-bond
+2,O=S(=O)(Cc1cccnc1)Nc1ccc(F)cc1-c1ccc2ccccc2c1C1CCNCC1,-10.62,7.79,2.61,0.389,475.6,1,generated_local_10k,8 pocket residues contacted; 2 H-bonds; 1 Lipinski violation (MW>500)
+3,NC(=O)NC(=O)CC1CNCCC1c1cccc2ccccc12,-10.59,7.77,3.12,0.812,311.4,0,generated_local_10k,Highest QED in top 5; urea-linked naphthalene scaffold
+4,NC(=O)Cc1c(NC(=O)c2cc(F)ccc2-c2cccnc2)ccc2ccccc12,-10.55,7.74,2.26,0.524,399.4,0,generated_local_10k,Lowest SA score in top 5 (easiest to synthesize)
+5,NC(=O)C1CNCCC1c1cc(F)ccc1-c1cnccc1C1CCCNC1,-10.51,7.71,3.75,0.759,382.5,0,generated_local_10k,Dual pyridine scaffold with piperidine fragments
+REF,(crystallographic inhibitor 3MTF / A3F),-9.27,6.80,3.34,0.680,370.5,0,PDB:3MTF,Reference ligand for ACVR1/ALK2
