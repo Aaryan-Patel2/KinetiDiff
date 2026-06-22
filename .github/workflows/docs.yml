@@ -18,7 +18,7 @@ jobs:
         with:
           fetch-depth: 0   # full history for mkdocs-git-revision-date
 
-      - uses: astral-sh/setup-uv@v3
+      - uses: astral-sh/setup-uv@v7
         with:
           version: "latest"
 
