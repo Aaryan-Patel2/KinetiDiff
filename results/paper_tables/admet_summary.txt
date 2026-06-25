@@ -1,0 +1,44 @@
+ADMET Summary (SwissADME, n=16 molecules)
+============================================================
+
+LEADS (L1-L3):
+  L1: MW=403.52 LogP=3.14 TPSA=66.15 GI=High BBB=Yes Pgp=Yes SA=4.09
+  L2: MW=475.58 LogP=4.74 TPSA=79.47 GI=High BBB=No Pgp=Yes SA=3.60
+  L3: MW=311.38 LogP=1.95 TPSA=84.22 GI=High BBB=No Pgp=Yes SA=2.79
+
+POPULATION (16 molecules):
+  Lipinski compliant (0 violations): 16/16 (100%)
+  PAINS-clean:  16/16 (100%)
+  Brenk-clean:  10/16 (62%)
+  High GI absorption: 16/16 (100%)
+  BBB permeable: 10/16 (62%)
+  Bioavailability Score: all = 0.55 (Lipinski-space oral bioavailability)
+
+BRENK-FLAGGED MOLECULES (deprioritize for synthesis):
+  T4: het-C-het_not_in_ring, triple_bond
+  T6: het-C-het_not_in_ring, isolated_alkene
+  T7: het-C-het_not_in_ring, isolated_alkene
+  T8: Three-membered_heterocycle
+  T11: imine_1, sulphur_nitrogen_single_bond
+  T13: isolated_alkene
+
+CLINICAL BENCHMARK (Vina kcal/mol, WT receptor):
+  LDN-193189:    WT=-10.793  R206H=-10.790  ΔΔG=0.003
+  Saracatinib:   WT=-10.061   R206H=-10.037   ΔΔG=0.024
+  Zilurgisertib: WT=-9.428  R206H=-9.578  ΔΔG=-0.150
+  LDN-212854:    WT=-10.03   R206H=-10.066   ΔΔG=-0.036
+
+  KinetiDiff leads vs clinical benchmark (WT Vina):
+    L1 (-10.63) vs LDN-193189 (-10.79): Δ = -0.16 kcal/mol  [within noise; LDN-193189 wins]
+    L1 (-10.63) vs Saracatinib (-10.06): Δ = +0.57 kcal/mol
+    L1 (-10.63) vs Zilurgisertib (-9.43): Δ = +1.20 kcal/mol
+    L1 (-10.63) vs LDN-212854 (-10.03): Δ = +0.60 kcal/mol
+
+pkCSM ABSORPTION (L1/L2/L3 only — screenshots extracted):
+  L1: HIA=93.111%  Caco2=0.929  WaterSol=-2.725  Pgp-I-inh=No  Pgp-II-inh=No
+  L2: HIA=92.37%  Caco2=0.981  WaterSol=-3.775  Pgp-I-inh=Yes  Pgp-II-inh=Yes
+  L3: HIA=95.493%  Caco2=0.998  WaterSol=-3.966  Pgp-I-inh=Yes  Pgp-II-inh=Yes
+
+NOTE: SwissADME CYP inhibitor fields unavailable (server-side n/d on run date 2026-06-18).
+      pkCSM Distribution/Metabolism/Excretion/Toxicity panels still pending for all 16 molecules.
+      pkCSM Absorption run for L1/L2/L3 only (screenshots in results/ADMET_results/pkCSM/).

@@ -51,6 +51,7 @@ Unlike traditional drug discovery approaches that optimize solely for tight bind
   - [Multi-Objective Generation](#multi-objective-generation)
   - [Molecular Docking Validation](#molecular-docking-validation)
 - [Results](#results)
+- [MD Validation on ORCD](#md-validation-on-orcd-engaging)
 - [Project Structure](#project-structure)
 - [Acknowledgements](#acknowledgements)
 - [License](#license)
@@ -386,6 +387,68 @@ python docking/dock_molecule.py \
 *AutoDock Vina docked poses of the top-two ranked de novo molecules in the ACVR1/ALK2 ATP-binding pocket (PDB 3MTF, pocket centroid 24.87 / −12.54 / 38.40 Å). Residues within 4 Å of the ligand are shown as sticks; hydrogen bonds indicated by dashed lines.*
 
 </div>
+
+---
+
+## MD Validation on ORCD Engaging
+
+*Added 2026-06-05.*
+
+Top-5 generated leads are validated by full molecular dynamics on the
+[MIT ORCD Engaging HPC cluster](https://orcd-docs.mit.edu/) — 100 ns × 3 replicas per system,
+against both the wild-type ACVR1 pocket and the disease-causing R206H mutant (FOP selectivity story).
+
+### Simulation campaign
+
+| | Details |
+|---|---|
+| Systems | 5 leads × WT + R206H = **10 systems** |
+| Replicas | **3 replicas** per system (seeds 42, 43, 44) |
+| Length | **100 ns/run** (50 M × 2 fs steps) |
+| Total | **30 runs ≈ 3,000 ns** |
+| Force field | AMBER ff14SB (protein) + OpenFF Sage 2.0 SMIRNOFF (ligand) + TIP3P |
+| Platform | MIT ORCD Engaging — `mit_preemptable` GPU + `mit_normal` CPU analysis |
+| Pocket | 3MTF apo pocket (A3F inhibitor stripped by PDBFixer; centroid 24.87, −12.54, 38.40 Å) |
+
+### How to run
+
+```bash
+# 1. Build the MD conda environment (on ORCD login node)
+module purge && module load miniforge
+conda env create -f environment-md.yml
+
+# 2. Smoke test (10 ps, validates pipeline)
+sbatch --partition=mit_quicktest -c 2 --mem=8G -t 00:15:00 \
+    --wrap="module purge && module load miniforge && conda activate kinetidiff-md && \
+    python -m kinetidiff.molecular_dynamics.simulation.runner \
+    --config configs/simulation.yaml --repo-root $(pwd) --smoke-test"
+
+# 3. Full campaign (equil → production → analysis)
+EQUIL=$(sbatch scripts/md/submit_equil_array.sh | awk '{print $NF}')
+PROD=$(sbatch --dependency=afterok:${EQUIL} scripts/md/submit_prod_array.sh | awk '{print $NF}')
+ANA=$(sbatch --dependency=afterok:${PROD} scripts/md/submit_analysis_array.sh | awk '{print $NF}')
+
+# 4. Build Drive-upload bundle (< 100 GB, water-stripped)
+bash scripts/md/sync_to_drive_bundle.sh
+```
+
+### Orchestration notebook
+
+`notebooks/md_validation.ipynb` — thin orchestration only (all logic lives in
+`src/kinetidiff/molecular_dynamics/`). Loads completed results, renders figures, builds the
+Drive bundle. Clear outputs before committing (`nbstripout`).
+
+### Module layout
+
+```
+src/kinetidiff/molecular_dynamics/
+  prep/          protein.py  ligand.py  system.py      # system construction
+  simulation/    equilibrate.py  production.py  runner.py  # OpenMM
+  analysis/      trajectory.py  mmgbsa.py  selectivity.py  postprocess.py
+  viz/           figures.py                              # publication plots
+configs/simulation.yaml                                 # single config source
+scripts/md/                                             # SLURM job scripts
+```
 
 ---
 

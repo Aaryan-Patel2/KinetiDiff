@@ -1,0 +1,44 @@
+name: kinetidiff-md
+# MD-stack environment — separate from the CUDA/diffusion environment.yml.
+# Install:   conda env create -f environment-md.yml && conda activate kinetidiff-md
+# Update pin: conda env export > environment-md.yml
+# On ORCD Engaging:
+#   module purge && module load miniforge && conda activate kinetidiff-md
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - pip
+  # Core scientific
+  - numpy>=1.26,<2.0
+  - scipy>=1.13
+  - pandas>=2.0
+  - matplotlib>=3.8
+  - seaborn>=0.13
+  # Chemistry
+  - rdkit>=2024.03
+  # MD + analysis (conda-forge builds avoid OpenMM CUDA conflicts)
+  - openmm>=8.1
+  - pdbfixer>=1.9
+  - mdtraj>=1.9
+  - mdanalysis>=2.7
+  # OpenFF toolkit + force fields — pin to a known-working stack
+  # (openff-toolkit>0.16 required for Python 3.11 support)
+  - openff-toolkit>=0.16.6
+  - openff-interchange>=0.3.30
+  - openff-forcefields>=2024.09.0
+  - openmmforcefields>=0.14
+  # Config
+  - omegaconf>=2.3
+  # Utilities
+  - tqdm>=4.66
+  - requests>=2.31
+  - pint>=0.24
+  # Jupyter (notebook orchestration)
+  - jupyter>=1.0
+  - ipywidgets>=8.0
+  - pip:
+    # Installed from pip because conda-forge builds sometimes lag
+    - biopython>=1.83
+    - nbstripout>=0.7      # strip notebook outputs before git commit

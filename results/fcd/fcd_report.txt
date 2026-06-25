@@ -1,0 +1,11 @@
+Fréchet ChemNet Distance Report
+==================================================
+Self-FCD [guided_multi_objective]: 0.0000  (should be ~0)
+Self-FCD [no_guidance]: -0.0000  (should be ~0)
+Internal-split FCD [guided_multi_objective]: 2.6287  (diversity of set; lower = more uniform)
+
+Interpretation:
+  Internal-split FCD < 1: set is very uniform (low diversity)
+  Internal-split FCD 1-5: moderate diversity within the set
+  Guided vs Unguided FCD: how much Vina guidance shifts the chemical space
+  For ChEMBL reference FCD, download ChEMBL25 SMILES and pass as ref=.

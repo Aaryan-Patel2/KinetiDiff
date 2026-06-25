@@ -5,7 +5,7 @@ description = "Vina-guided diffusion for structure-based drug design targeting A
 readme = "README.md"
 license = { file = "LICENSE" }
 authors = [{ name = "Aaryan Patel", email = "aaryanp0302@gmail.com" }]
-requires-python = ">=3.10,<3.11"
+requires-python = ">=3.10,<3.13"
 keywords = [
   "diffusion",
   "drug-discovery",
@@ -53,10 +53,15 @@ docs = [
   "mkdocs-material>=9.5",
   "mkdocstrings[python]>=0.25",
 ]
-# MD stack: install with environment-md.yml (conda) then `uv sync --extra md`
+# MD stack: primary install is via environment-md.yml (conda).
+# Use `uv sync --extra md` for pip-only environments (no CUDA OpenMM).
 md = [
   "mdanalysis>=2.7",
-  "mdtraj>=1.10",
+  "mdtraj>=1.9",
+  "biopython>=1.83",
+  "omegaconf>=2.3",
+  "nbstripout>=0.7",
+  # openmm, pdbfixer, openff-toolkit, openmmforcefields — conda-only (see environment-md.yml)
 ]
 # Affinity predictor extras (pytorch already in conda env)
 affinity = [

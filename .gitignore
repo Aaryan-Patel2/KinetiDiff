@@ -104,6 +104,11 @@ tensorboard_logs/
 outputs/
 
 # ============================================================
+# MD simulation SLURM logs (written to logs/md/ during jobs)
+# ============================================================
+logs/md/
+
+# ============================================================
 # Notebook checkpoints (outputs cleared by nbstripout hook)
 # ============================================================
 .ipynb_checkpoints/
@@ -130,6 +135,7 @@ Thumbs.db
 # Agent / LLM tooling (private developer context)
 # ============================================================
 .llm/
+.claude/
 
 # ============================================================
 # Secrets & credentials

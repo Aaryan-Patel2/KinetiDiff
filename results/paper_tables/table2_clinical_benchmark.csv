@@ -1,0 +1,5 @@
+compound,WT_vina,R206H_vina,delta_delta_G,notes,error
+LDN-193189,-10.793,-10.790,0.003,Selective BMP type-I receptor inhibitor; ALK2 IC50 ~5 nM,
+Saracatinib,-10.061,-10.037,0.023999999999999133,Dual Src/ABL inhibitor; ALK2/ACVR1 kinase activity,
+Zilurgisertib,-9.428,-9.578,-0.14999999999999858,Selective ALK2 inhibitor; FOP clinical trial (RESILIENT),
+LDN-212854,-10.03,-10.066,-0.036000000000001364,Second-gen ALK2-selective inhibitor; improved selectivity over LDN-193189,

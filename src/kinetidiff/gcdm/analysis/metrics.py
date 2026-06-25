@@ -6,7 +6,7 @@ from rdkit.Chem import QED, Crippen, Descriptors, Lipinski
 from scipy.spatial.distance import cdist
 from tqdm import tqdm
 
-from ..constants import allowed_bonds
+from kinetidiff.gcdm.constants import allowed_bonds
 
 
 class CategoricalDistribution:

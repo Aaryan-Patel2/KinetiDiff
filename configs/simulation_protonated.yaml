@@ -1,0 +1,97 @@
+# KinetiDiff MD — Protonated (salt-form) campaign: L1p/WT + L2p/R206H
+# Protonates the piperidine secondary amine to [NH2+] (formal charge +1, pKa ~10-11)
+# to capture physiological electrostatic anchoring absent from the neutral-form run.
+#
+# All FF / solvent / simulation / mmgbsa / analysis blocks are IDENTICAL to
+# configs/simulation.yaml for apples-to-apples comparison.
+# Only campaign + paths differ.
+#
+# Re-docked with Vina (seed=42, exh=16, box 25^3 Å, corrected pocket centre):
+#   L1p/WT   = -10.69 kcal/mol  (vs neutral L1/WT = -11.05)
+#   L2p/R206H = -9.80 kcal/mol  (vs neutral L2/R206H = -10.62)
+# Date: 2026-06-22
+
+# ── Pocket geometry ──────────────────────────────────────────────────────────
+pocket:
+  center_x: -17.66
+  center_y: -13.65
+  center_z: 38.41
+  centroid_tolerance_A: 3.0
+
+# ── Force-field stack (LOCKED — identical to simulation.yaml) ────────────────
+forcefield:
+  protein: "amber14-all.xml"
+  water:   "amber14/tip3p.xml"
+  ligand:  "openff-2.0.0.offxml"
+  allow_gasteiger_charges: false    # NAGL AM1-BCC; charges recomputed for +1 formal charge
+
+# ── Solvent & system ─────────────────────────────────────────────────────────
+solvent:
+  padding_nm: 1.0
+  ionic_strength_M: 0.15            # 0.15 M NaCl; neutralize=True adds 1 Cl- to offset +1 ligand
+
+# ── Simulation parameters (identical to simulation.yaml) ─────────────────────
+simulation:
+  timestep_ps: 0.002
+  temperature_K: 300
+  pressure_bar: 1.0
+  friction_per_ps: 1.0
+  minimize_max_iterations: 5000
+  nvt_steps: 50000
+  npt_steps: 50000
+  restraint_k_kcal: 2.0
+  production_steps: 50000000        # 100 ns
+  report_interval: 5000
+  checkpoint_interval: 50000
+  smoke_steps: 5000
+
+# ── MM-GBSA (identical to simulation.yaml) ───────────────────────────────────
+mmgbsa:
+  n_snapshots: 100
+
+# ── Campaign matrix — FOCUSED: explicit (ligand, receptor) pairs ─────────────
+# Uses the `complexes` key so build_run_matrix() skips the full cross-product
+# and runs only the two specified systems × 2 replicas = 4 production runs.
+#
+# SLURM array sizes:  equil  -a 0-1  (2 tasks: 1 per complex)
+#                     prod   -a 0-3  (4 tasks: 1 per run)
+#                     analysis -a 0-3
+campaign:
+  seeds: [42, 43]
+  complexes:
+    - [L1p, WT]
+    - [L2p, R206H]
+  ligands:
+    L1p:
+      smiles: "O=C(NC1CC[NH2+]CC1c1ccc[nH]1)c1c(C2CCCOC2)ccc2ccccc12"
+      vina:    -10.69
+      pkd:     7.85       # estimated; neutral L1 was 8.10
+      sa:      3.79       # unchanged from neutral L1
+      qed:     0.618
+      mw:      404.5
+      resname: "L1P"
+    L2p:
+      smiles: "O=S(=O)(Cc1cccnc1)Nc1ccc(F)cc1-c1ccc2ccccc2c1C1CC[NH2+]CC1"
+      vina:    -9.80
+      pkd:     7.19       # estimated; neutral L2 was 7.79
+      sa:      2.61
+      qed:     0.389
+      mw:      476.6
+      resname: "L2P"
+  priority_order: ["L1p", "L2p"]
+
+# ── Storage paths ─────────────────────────────────────────────────────────────
+paths:
+  structures_dir:   "data/structures"
+  sdf_input:        "results/redocked_poses/protonated_leads_ranked.sdf"
+  scratch_dir:      "${oc.env:ORCD_SCRATCH,${oc.env:HOME}/orcd/scratch}/kinetidiff-md"
+  pool_dir:         "${oc.env:ORCD_POOL,${oc.env:HOME}/orcd/pool}/kinetidiff-md"
+  bundle_dir:       "${oc.env:HOME}/kinetidiff-md-bundle"
+
+# ── Analysis thresholds (identical to simulation.yaml) ───────────────────────
+analysis:
+  ligand_rmsd_unstable_A: 4.0
+  hbond_min_occupancy: 0.10
+  pocket_contact_cutoff_A: 4.5
+  selectivity_threshold_kcal: -0.5
+  bundle_stride: 10

@@ -1,0 +1,111 @@
+# KinetiDiff MD Validation — single source of truth for the simulation campaign.
+# All runtime paths use ${oc.env:USER} / ${REPO_ROOT} substitution.
+# LOCKED force-field stack: do not change without updating CLAUDE.md + ARCH.md.
+
+# ── Pocket geometry ──────────────────────────────────────────────────────────
+pocket:
+  center_x: -17.66
+  center_y: -13.65
+  center_z: 38.41
+  # Sanity-check tolerance (Å): assert pocket centroid is within this distance
+  # of the canonical binding-site centroid after protein prep.
+  centroid_tolerance_A: 3.0
+
+# ── Force-field stack (LOCKED April 2026) ────────────────────────────────────
+forcefield:
+  protein: "amber14-all.xml"
+  water:   "amber14/tip3p.xml"
+  ligand:  "openff-2.0.0.offxml"   # OpenFF Sage 2.0 via SMIRNOFF
+  # Gasteiger charges are fast but not AM1-BCC quality.
+  # Set true ONLY for smoke tests / dev; must be false for production.
+  # NAGL models confirmed installed (openff-gnn-am1bcc-1.0.0.pt) — AM1-BCC quality charges.
+  allow_gasteiger_charges: false
+
+# ── Solvent & system ─────────────────────────────────────────────────────────
+solvent:
+  padding_nm: 1.0
+  ionic_strength_M: 0.15   # 0.15 M NaCl — physiological
+
+# ── Simulation parameters ────────────────────────────────────────────────────
+simulation:
+  timestep_ps: 0.002                # 2 fs
+  temperature_K: 300
+  pressure_bar: 1.0
+  friction_per_ps: 1.0
+  # Equilibration
+  minimize_max_iterations: 5000
+  nvt_steps: 50000                  # 100 ps NVT
+  npt_steps: 50000                  # 100 ps NPT
+  restraint_k_kcal: 2.0             # harmonic restraint during equilibration
+  # Production (750 ns campaign)
+  production_steps: 375000000       # 375 M × 2 fs = 750 ns
+  report_interval: 25000            # DCD/log every 50 ps → 20 000 frames per run
+  checkpoint_interval: 50000        # .chk every 100 ps
+  # Smoke-test override (10 ps — validates system build only)
+  smoke_steps: 5000
+
+# ── MM-GBSA ──────────────────────────────────────────────────────────────────
+mmgbsa:
+  n_snapshots: 100           # snapshots per trajectory for GBn2 energy eval
+  # Note: R² ≈ 0.63 for relative ranking; do not interpret as absolute ΔG
+
+# ── Campaign matrix ──────────────────────────────────────────────────────────
+# 3 leads × 2 receptors × 1 replica = 6 production runs × 750 ns = 4 500 ns total.
+# seeds: 42, 43, 44 (replica 1, 2, 3 respectively)
+campaign:
+  seeds: [42]                   # 1 replica — 6 systems × 1000 ns fits 12-day deadline at 6 GPUs
+  receptors: ["WT", "R206H"]
+  ligands:
+    L1:
+      smiles: "O=C(NC1CCNCC1c1ccc[nH]1)c1c(C2CCCOC2)ccc2ccccc12"
+      vina: -11.05
+      pkd:   8.10
+      sa:    3.79
+      qed:   0.618
+      mw:    403.5
+      resname: "L01"
+    L2:
+      smiles: "O=S(=O)(Cc1cccnc1)Nc1ccc(F)cc1-c1ccc2ccccc2c1C1CCNCC1"
+      vina: -10.62
+      pkd:   7.79
+      sa:    2.61
+      qed:   0.389
+      mw:    475.6
+      resname: "L02"
+    L3:
+      smiles: "NC(=O)NC(=O)CC1CNCCC1c1cccc2ccccc12"
+      vina: -10.59
+      pkd:   7.77
+      sa:    3.12
+      qed:   0.812
+      mw:    311.4
+      resname: "L03"
+  # Priority tier — used to order SLURM tasks (lower index = higher priority)
+  priority_order: ["L1", "L2", "L3"]
+
+# ── Storage paths (relative to REPO_ROOT; resolved at runtime) ────────────────
+# On ORCD Engaging the REPO_ROOT lives in Home; heavy I/O routes to scratch/pool.
+paths:
+  # Input structures (version-controlled, small)
+  structures_dir:   "data/structures"
+  # SDF with docked top-5 poses
+  sdf_input:        "results/redocked_poses/top3_leads_WT_ranked.sdf"
+  # ORCD scratch — active job I/O (set by runner.py from ORCD_SCRATCH env var)
+  scratch_dir:      "${oc.env:ORCD_SCRATCH,${oc.env:HOME}/orcd/scratch}/kinetidiff-md"
+  # ORCD pool — full trajectories after run (not backed up, not uploaded)
+  pool_dir:         "${oc.env:ORCD_POOL,${oc.env:HOME}/orcd/pool}/kinetidiff-md"
+  # Curated Drive-upload bundle (< 100 GB, water-stripped + strided)
+  bundle_dir:       "${oc.env:HOME}/kinetidiff-md-bundle"
+
+# ── Analysis thresholds ───────────────────────────────────────────────────────
+analysis:
+  # Ligand RMSD above this (Å, sustained over last 20% of trajectory) → flag unstable
+  ligand_rmsd_unstable_A: 4.0
+  # Minimum H-bond occupancy fraction to report
+  hbond_min_occupancy: 0.10
+  # Pocket contact: residues within this distance of ligand heavy atoms
+  pocket_contact_cutoff_A: 4.5
+  # Selectivity threshold: ΔΔG < this (kcal/mol) → selective for R206H
+  selectivity_threshold_kcal: -0.5
+  # Trajectory striding for the Drive-bundle analysis trajectory (every N frames)
+  bundle_stride: 10

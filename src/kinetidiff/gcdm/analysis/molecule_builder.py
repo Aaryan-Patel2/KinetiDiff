@@ -8,7 +8,7 @@ import utils
 from rdkit import Chem
 from rdkit.Chem.rdForceFieldHelpers import UFFHasAllMoleculeParams, UFFOptimizeMolecule
 
-from ..constants import bond_dict, bonds1, bonds2, bonds3, margin1, margin2, margin3
+from kinetidiff.gcdm.constants import bond_dict, bonds1, bonds2, bonds3, margin1, margin2, margin3
 
 
 def get_bond_order(atom1, atom2, distance):
