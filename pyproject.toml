@@ -35,7 +35,7 @@ dependencies = [
   "omegaconf>=2.3",
   "pyyaml>=6.0",
   "tqdm>=4.65",
-  "meeko>=0.7,<0.8",
+  "meeko>=0.7,<0.9",
 ]
 
 [project.optional-dependencies]
